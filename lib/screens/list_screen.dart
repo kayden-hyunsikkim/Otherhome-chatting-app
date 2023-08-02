@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chatrefer/screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// Git hub upload check - 잘될시 지울예정
 
 class ChatList extends StatefulWidget {
   const ChatList({Key? key}) : super(key: key);
