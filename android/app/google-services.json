@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "521240666194",
+    "project_id": "otherhomechat",
+    "storage_bucket": "otherhomechat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521240666194:android:3dd4cea94aeea29cc9ff8b",
+        "android_client_info": {
+          "package_name": "com.example.chatrefer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521240666194-hjih5qiq36g1vbt8o6a4tn5vsqqo1v64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClhwYKthxabuiYu1BfCz9Co_g9V2uNOO0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521240666194-hjih5qiq36g1vbt8o6a4tn5vsqqo1v64.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
