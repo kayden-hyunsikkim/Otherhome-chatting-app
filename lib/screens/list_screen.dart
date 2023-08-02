@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chatrefer/screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Git hub upload check - 잘될시 지울예정
 
@@ -29,6 +30,19 @@ class _ChatListState extends State<ChatList> {
   }
 
   @override
+  void _launchEmail(String email) async {
+    final Uri _emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: email,
+    );
+
+    if (await canLaunch(_emailLaunchUri.toString())) {
+      await launch(_emailLaunchUri.toString());
+    } else {
+      throw 'Could not launch $_emailLaunchUri';
+    }
+  }
+
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -36,16 +50,19 @@ class _ChatListState extends State<ChatList> {
     fetchUsernames();
   }
 
-  void getCurrentUser() async  {
+  void getCurrentUser() async {
     try {
       final user = _authentication.currentUser;
       if (user != null) {
         loggedUser = user;
         print(loggedUser!.email);
-        final userData =
-            await FirebaseFirestore.instance.collection('user').doc(user.uid).get();
+        final userData = await FirebaseFirestore.instance
+            .collection('user')
+            .doc(user.uid)
+            .get();
         setState(() {
-          _selectedNumber = userData.data()?['houseNumber']; // user 정보의 house number를 할당
+          _selectedNumber =
+              userData.data()?['houseNumber']; // user 정보의 house number를 할당
         });
       }
     } catch (e) {
@@ -59,8 +76,10 @@ class _ChatListState extends State<ChatList> {
       final userDocs = await userCollection.get();
 
       setState(() {
-        _housenumbers = userDocs.docs.map((doc) => doc['houseNumber'] as String).toList();
-        _usernames = userDocs.docs.map((doc) => doc['userName'] as String).toList();
+        _housenumbers =
+            userDocs.docs.map((doc) => doc['houseNumber'] as String).toList();
+        _usernames =
+            userDocs.docs.map((doc) => doc['userName'] as String).toList();
       });
       print(_housenumbers);
       print(_usernames);
@@ -68,7 +87,6 @@ class _ChatListState extends State<ChatList> {
       print('Error fetching usernames: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +96,6 @@ class _ChatListState extends State<ChatList> {
           actions: [
             IconButton(
               icon: Icon(
-
                 Icons.exit_to_app_sharp,
                 color: Colors.white,
               ),
@@ -90,15 +107,21 @@ class _ChatListState extends State<ChatList> {
         ),
         body: GestureDetector(
           onTap: () {
-            if (_isAdminUser()) { // Only pass the selected number if the user is an admin
+            if (_isAdminUser()) {
+              // Only pass the selected number if the user is an admin
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HouseChatScreen(selectedNumber: _selectedNumber)),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HouseChatScreen(selectedNumber: _selectedNumber)),
               );
-            } else { // For non-admin users, just navigate to HouseChatScreen without passing the selected number
+            } else {
+              // For non-admin users, just navigate to HouseChatScreen without passing the selected number
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HouseChatScreen(selectedNumber: _selectedNumber)),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HouseChatScreen(selectedNumber: _selectedNumber)),
               );
             }
           },
@@ -111,7 +134,7 @@ class _ChatListState extends State<ChatList> {
                       alignment: Alignment.center,
                       width: MediaQuery.of(context).size.width - 40,
                       margin: EdgeInsets.fromLTRB(20, 40, 20, 0),
-                      height: 250,
+                      height: 200,
                       decoration: BoxDecoration(
                           color: Colors.lightGreen,
                           borderRadius: BorderRadius.circular(15.0),
@@ -142,7 +165,7 @@ class _ChatListState extends State<ChatList> {
                             child: Container(
                                 padding: EdgeInsets.all(30),
                                 width: MediaQuery.of(context).size.width - 40,
-                                height: 200,
+                                height: 150,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.only(
@@ -154,7 +177,7 @@ class _ChatListState extends State<ChatList> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CircleAvatar(
-                                      radius: 60,
+                                      radius: 45,
                                       backgroundColor: Colors.lightGreen,
                                     ),
                                     SizedBox(
@@ -162,8 +185,6 @@ class _ChatListState extends State<ChatList> {
                                     ),
                                     Column(
                                       children: [
-                                        Text('details details details '),
-                                        SizedBox(height: 20),
                                         Text('details details details '),
                                         SizedBox(height: 20),
                                         Text('details details details '),
@@ -238,17 +259,18 @@ class _ChatListState extends State<ChatList> {
                                     Column(
                                       children: [
                                         DropdownButton<int>(
-                                            value: _selectedNumber,
-                                            onChanged: (int? newValue) {
-                                              setState(() {
-                                                _selectedNumber = newValue ?? 1;
-                                                print(_selectedNumber);
-                                              });
-                                            },
+                                          value: _selectedNumber,
+                                          onChanged: (int? newValue) {
+                                            setState(() {
+                                              _selectedNumber = newValue ?? 1;
+                                              print(_selectedNumber);
+                                            });
+                                          },
                                           items: List.generate(10, (index) {
                                             return DropdownMenuItem<int>(
                                               value: index + 1,
-                                              child: Text((index + 1).toString()),
+                                              child:
+                                                  Text((index + 1).toString()),
                                             );
                                           }),
                                         )
@@ -261,88 +283,88 @@ class _ChatListState extends State<ChatList> {
                       ),
                     ),
                   ],
-
                 ),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ChatScreen(selecteduserName: _selecteduserName)),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ChatScreen(selecteduserName: _selecteduserName)),
                   );
                 },
                 child: Column(
                   children: [
                     if (!_isAdminUser()) // when current user id is normal user id
-                    Container(
-                      alignment: Alignment.center,
-                      width: MediaQuery.of(context).size.width - 40,
-                      margin: EdgeInsets.fromLTRB(20, 40, 20, 0),
-                      height: 250,
-                      decoration: BoxDecoration(
-                          color: Colors.lightGreen,
-                          borderRadius: BorderRadius.circular(15.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 15,
-                              spreadRadius: 5,
-                            )
-                          ]),
-                      child: Column(
-                        children: [
-                          Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
-                                child: Text(
-                                  'Notice from Admin',
-                                  style: TextStyle(
-                                      fontSize: 30, color: Colors.white),
-                                ),
-                              )),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                                padding: EdgeInsets.all(30),
-                                width: MediaQuery.of(context).size.width - 40,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    bottomLeft: Radius.circular(15.0),
-                                    bottomRight: Radius.circular(15.0),
+                      Container(
+                        alignment: Alignment.center,
+                        width: MediaQuery.of(context).size.width - 40,
+                        margin: EdgeInsets.fromLTRB(20, 40, 20, 0),
+                        height: 200,
+                        decoration: BoxDecoration(
+                            color: Colors.lightGreen,
+                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 15,
+                                spreadRadius: 5,
+                              )
+                            ]),
+                        child: Column(
+                          children: [
+                            Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
+                                  child: Text(
+                                    'Notice from Admin',
+                                    style: TextStyle(
+                                        fontSize: 30, color: Colors.white),
                                   ),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 60,
-                                      backgroundColor: Colors.lightGreen,
-                                    ),
-                                    SizedBox(
-                                      width: 50,
-                                    ),
-                                    Column(
-                                      children: [
-                                        Text('details details details '),
-                                        SizedBox(height: 20),
-                                        Text('details details details '),
-                                        SizedBox(height: 20),
-                                        Text('details details details '),
-                                        SizedBox(height: 20),
-                                        Text('details details details '),
-                                      ],
-                                    )
-                                  ],
                                 )),
-                          ),
-                        ],
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                  padding: EdgeInsets.all(30),
+                                  width: MediaQuery.of(context).size.width - 40,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(15.0),
+                                      bottomRight: Radius.circular(15.0),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 45,
+                                        backgroundColor: Colors.lightGreen,
+                                      ),
+                                      SizedBox(
+                                        width: 50,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text('details details details '),
+                                          SizedBox(height: 20),
+                                          Text('details details details '),
+                                          SizedBox(height: 20),
+                                          Text('details details details '),
+                                        ],
+                                      )
+                                    ],
+                                  )),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                     if (_isAdminUser()) // when current user id is normal user id
                       Container(
                         alignment: Alignment.center,
@@ -388,7 +410,8 @@ class _ChatListState extends State<ChatList> {
                                     ),
                                   ),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CircleAvatar(
                                         radius: 60,
@@ -404,8 +427,6 @@ class _ChatListState extends State<ChatList> {
                                           Text('details details details '),
                                           SizedBox(height: 20),
                                           Text('details details details '),
-                                          SizedBox(height: 20),
-                                          Text('details details details '),
                                         ],
                                       )
                                     ],
@@ -414,6 +435,66 @@ class _ChatListState extends State<ChatList> {
                           ],
                         ),
                       ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _launchEmail('example1@example.com');
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'CS Inquiry  :',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            'example1@example.com',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.green,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _launchEmail('example2@example.com');
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Maintence Inquiry  :',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            'example2@example.com',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.green,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
