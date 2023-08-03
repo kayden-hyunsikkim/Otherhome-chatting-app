@@ -2,7 +2,7 @@ import 'package:chatrefer/chatting/chat/new_housemessage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chatrefer/chatting/chat/housemessage.dart';
-import 'package:chatrefer/screens/main_screen.dart';
+
 
 class HouseChatScreen extends StatefulWidget {
   final int selectedNumber; // Add this line to receive the selected number

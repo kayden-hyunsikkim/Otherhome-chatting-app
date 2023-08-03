@@ -5,6 +5,7 @@ import 'package:chatrefer/screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+
 // Git hub upload check - 잘될시 지울예정
 
 class ChatList extends StatefulWidget {
@@ -435,66 +436,71 @@ class _ChatListState extends State<ChatList> {
                           ],
                         ),
                       ),
-                    SizedBox(
-                      height: 35,
+                    if (!_isAdminUser())
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 35,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _launchEmail('example1@example.com');
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'CS Inquiry  :',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'example1@example.com',
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.green,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _launchEmail('example2@example.com');
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Maintence Inquiry  :',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'example2@example.com',
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.green,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        _launchEmail('example1@example.com');
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'CS Inquiry  :',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            'example1@example.com',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.green,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _launchEmail('example2@example.com');
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Maintence Inquiry  :',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            'example2@example.com',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.green,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
                   ],
                 ),
               ),
