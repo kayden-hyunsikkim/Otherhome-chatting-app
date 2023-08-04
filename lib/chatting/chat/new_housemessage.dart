@@ -1,4 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+
+import 'dart:io';
+import 'package:chatrefer/add_image/add_imageinchat.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +17,11 @@ class NewHouseMessage extends StatefulWidget {
 class _NewHouseMessageState extends State<NewHouseMessage> {
   final _controller = TextEditingController();
   var _userEnterMessage = '';
+  File? userPickedImage;
+
+  void pickedImage(File image) {
+    userPickedImage = image;
+  }
 
   void _sendMessage() async {
     FocusScope.of(context).unfocus(); // hide keyboard after sending message
@@ -26,6 +35,18 @@ class _NewHouseMessageState extends State<NewHouseMessage> {
       'userImage' : userData['profilePicture']
     });
     _controller.clear();
+  }
+
+  void showAlert(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          child: AddImage(pickedImage),
+        );
+      },
+    );
   }
 
   @override
@@ -47,10 +68,25 @@ class _NewHouseMessageState extends State<NewHouseMessage> {
               },
             ),
           ),
+          GestureDetector(
+            child: IconButton(
+              onPressed: () {
+                showAlert(context);
+              },
+              icon: Icon(Icons.image),
+              color: Colors.lightGreen,
+            ),
+          ),
+          IconButton(
+            onPressed: _userEnterMessage.trim().isEmpty ? null : _sendMessage,
+            icon: Icon(Icons.file_copy),
+            color: Colors.lightGreen,
+          ),
           IconButton(
             onPressed: _userEnterMessage.trim().isEmpty ? null : _sendMessage,
             icon: Icon(Icons.send),
             color: Colors.lightGreen,
+
           ),
         ],
       ),
