@@ -4,17 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-
 class HouseMessages extends StatefulWidget {
   final int selectedNumber; // 추가: 선택한 번호를 받아오는 매개변수
 
   HouseMessages({required this.selectedNumber}); // 생성자 추가
 
-
   @override
   _HouseMessageState createState() => _HouseMessageState();
 }
-
 
 class _HouseMessageState extends State<HouseMessages> {
   late String _houseNumber;
@@ -34,12 +31,12 @@ class _HouseMessageState extends State<HouseMessages> {
     _initializeData();
   }
 
-
-
   Future<void> _initializeData() async {
     final user = FirebaseAuth.instance.currentUser;
-    final userData =
-    await FirebaseFirestore.instance.collection('user').doc(user!.uid).get();
+    final userData = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user!.uid)
+        .get();
     if (_isAdminUser(user!.uid)) {
       var _newhouseNumber = _selectedNumber.toString();
       _houseNumber = _newhouseNumber; // 선택한 번호에 맞는 house number로 설정
@@ -51,7 +48,6 @@ class _HouseMessageState extends State<HouseMessages> {
       _isLoading = false;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +62,7 @@ class _HouseMessageState extends State<HouseMessages> {
           .collection(_houseNumber)
           .orderBy('time', descending: true)
           .snapshots(),
-      builder: (context,
-          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+      builder: (context, snapshot)  {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: CircularProgressIndicator(),
@@ -75,32 +70,47 @@ class _HouseMessageState extends State<HouseMessages> {
         }
         final chatDocs = snapshot.data!.docs;
 
+
         return ListView.builder(
           reverse: true,
           itemCount: chatDocs.length,
           itemBuilder: (context, index) {
             final chatData = chatDocs[index].data();
+
+            print(chatData);
+            print(chatDocs.length);
+
             final time = chatData['time'] as Timestamp;
             final formattedTime =
-            DateFormat('       MM-dd hh:mm a       ').format(time.toDate());
+                DateFormat('       MM-dd hh:mm a       ').format(time.toDate());
 
             return Column(
               crossAxisAlignment:
-              chatDocs[index]['userID'].toString() == user!.uid
-                  ? CrossAxisAlignment.end
-                  : CrossAxisAlignment.start,
+                  chatDocs[index]['userID'].toString() == user!.uid
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
               children: [
                 ChatBubbles(
-                    chatDocs[index]['text'],
-                    chatDocs[index]['userID'].toString() == user!.uid,
-                    chatDocs[index]['userName'],
-                    chatDocs[index]['userImage']),
+                  chatDocs[index]['text'],
+                  chatDocs[index]['userID'].toString() == user!.uid,
+                  chatDocs[index]['userName'],
+                  chatDocs[index]['userImage'],
+
+                ),
+                SizedBox(height: 8),
+                if (chatDocs[index].data().containsKey('sentImage')) // 'sentImage' 필드가 있는지 확인
+                  Image.network(
+                    chatDocs[index]['sentImage'], // 이미지 URL 가져와서 표시
+                    width: 250, // 이미지의 크기를 조절하거나 원하는대로 스타일링 가능
+                    height: 200,
+                  ),
                 SizedBox(height: 8),
                 Text(
                   formattedTime.substring(0, formattedTime.length),
                   style: TextStyle(fontSize: 10),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 16),
+
               ],
             );
           },

@@ -63,10 +63,12 @@ class Messages extends StatelessWidget {
                         : CrossAxisAlignment.start,
                 children: [
                   ChatBubbles(
-                      chatDocs[index]['text'],
-                      chatDocs[index]['userID'].toString() == user!.uid,
-                      chatDocs[index]['userName'],
-                      chatDocs[index]['userImage']),
+                    chatDocs[index]['text'],
+                    chatDocs[index]['userID'].toString() == user!.uid,
+                    chatDocs[index]['userName'],
+                    chatDocs[index]['userImage'],
+
+                  ),
                   SizedBox(height: 8),
                   Text(
                     formattedTime.substring(0, formattedTime.length),

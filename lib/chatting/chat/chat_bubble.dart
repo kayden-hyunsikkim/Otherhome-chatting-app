@@ -5,13 +5,16 @@ import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_8.dart';
 
 class ChatBubbles extends StatelessWidget {
   const ChatBubbles(this.message, this.isMe, this.userName, this.userImage,
-      {Key? key})
+      {Key? key })
       : super(key: key);
 
   final String message;
   final String userName;
   final bool isMe;
   final String userImage;
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,7 @@ class ChatBubbles extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.white),
                       ),
+
                       Text(
                         message,
                         style: TextStyle(color: Colors.white),
@@ -72,6 +76,7 @@ class ChatBubbles extends StatelessWidget {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
+
                       Text(
                         message,
                         style: TextStyle(color: Colors.black),

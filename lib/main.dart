@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context,snapshot){
           if(snapshot.hasData){
-            Future.delayed(const Duration(seconds: 2), () {
+            Future.delayed(const Duration(seconds: 3), () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => ChatList()),
