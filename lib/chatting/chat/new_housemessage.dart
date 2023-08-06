@@ -8,7 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class NewHouseMessage extends StatefulWidget {
-  const NewHouseMessage({Key? key}) : super(key: key);
+  final int selectedNumber; // 추가: 선택한 번호를 받아오는 매개변수
+  const NewHouseMessage({required this.selectedNumber,Key? key}) : super(key: key);
 
   @override
   State<NewHouseMessage> createState() => _NewHouseMessageState();
@@ -19,21 +20,54 @@ class _NewHouseMessageState extends State<NewHouseMessage> {
   var _userEnterMessage = '';
   File? userPickedImage;
 
+
   void pickedImage(File image) {
     userPickedImage = image;
   }
 
   void _sendMessage() async {
+    print(_userEnterMessage);
+    print(widget.selectedNumber);
     FocusScope.of(context).unfocus(); // hide keyboard after sending message
     final user = FirebaseAuth.instance.currentUser;
-    final userData = await FirebaseFirestore.instance.collection('user').doc(user!.uid).get();
-    FirebaseFirestore.instance.collection(userData.data()!['houseNumber']).add({
-      'text': _userEnterMessage,
-      'time': Timestamp.now(),
-      'userID': user!.uid,
-      'userName' : userData.data()!['userName'],
-      'userImage' : userData['profilePicture']
-    });
+    print(user);
+    final userData = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user!.uid)
+        .get();
+    print(user.uid);
+    if (user!.uid == "yVXgbr1mh0Q1Osg72NzmQhtjwFm2") {
+      print('hi');
+      print(_userEnterMessage);
+      print(widget.selectedNumber);
+      String selectedNumber = widget.selectedNumber.toString();
+      print(selectedNumber);
+      print(userData.data()!['userName']);
+      print(userData['profilePicture']);
+      print(Timestamp.now());
+
+
+      FirebaseFirestore.instance
+          .collection(selectedNumber)
+          .add({
+        'text': _userEnterMessage,
+        'time': Timestamp.now(),
+        'userID': user!.uid,
+        'userName': userData.data()!['userName'],
+        'userImage': userData['profilePicture']
+      });
+    } else {
+      FirebaseFirestore.instance
+          .collection(userData.data()!['houseNumber'])
+          .add({
+        'text': _userEnterMessage,
+        'time': Timestamp.now(),
+        'userID': user!.uid,
+        'userName': userData.data()!['userName'],
+        'userImage': userData['profilePicture']
+      });
+    }
+
     _controller.clear();
   }
 
@@ -43,13 +77,13 @@ class _NewHouseMessageState extends State<NewHouseMessage> {
       builder: (context) {
         return Dialog(
           backgroundColor: Colors.white,
-          child: AddImage(pickedImage),
+          child: AddImage(pickedImage, widget.selectedNumber),
         );
       },
     );
   }
-
   @override
+
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 8),
@@ -86,7 +120,6 @@ class _NewHouseMessageState extends State<NewHouseMessage> {
             onPressed: _userEnterMessage.trim().isEmpty ? null : _sendMessage,
             icon: Icon(Icons.send),
             color: Colors.lightGreen,
-
           ),
         ],
       ),

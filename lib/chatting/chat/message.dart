@@ -70,6 +70,12 @@ class Messages extends StatelessWidget {
 
                   ),
                   SizedBox(height: 8),
+                  if (chatDocs[index].data().containsKey('sentImage')) // 'sentImage' 필드가 있는지 확인
+                    Image.network(
+                      chatDocs[index]['sentImage'], // 이미지 URL 가져와서 표시
+                      width: 250, // 이미지의 크기를 조절하거나 원하는대로 스타일링 가능
+                      height: 200,
+                    ),
                   Text(
                     formattedTime.substring(0, formattedTime.length),
                     style: TextStyle(fontSize: 10),
