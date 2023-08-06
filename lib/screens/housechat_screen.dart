@@ -51,9 +51,9 @@ class _HouseChatScreenState extends State<HouseChatScreen> {
         child: Column(
           children: [
             Expanded(
-              child: HouseMessages(selectedNumber: _selectedNumber), // 선택한 번호를 전달
+              child: HouseMessages(selectedNumber: widget.selectedNumber), // 선택한 번호를 전달
             ),
-            NewHouseMessage(),
+            NewHouseMessage(selectedNumber: widget.selectedNumber),
           ],
         ),
       ),
