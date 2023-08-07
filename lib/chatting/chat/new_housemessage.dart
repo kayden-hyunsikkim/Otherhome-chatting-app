@@ -1,4 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:chatrefer/add_image/add_fileinchat.dart';
+
 
 import 'dart:io';
 import 'package:chatrefer/add_image/add_imageinchat.dart';
@@ -19,10 +20,15 @@ class _NewHouseMessageState extends State<NewHouseMessage> {
   final _controller = TextEditingController();
   var _userEnterMessage = '';
   File? userPickedImage;
+  File? userFileImage;
 
 
   void pickedImage(File image) {
     userPickedImage = image;
+  }
+
+  void pickedFile(File file) {
+    userFileImage = file;
   }
 
   void _sendMessage() async {
@@ -77,7 +83,19 @@ class _NewHouseMessageState extends State<NewHouseMessage> {
       builder: (context) {
         return Dialog(
           backgroundColor: Colors.white,
-          child: AddImage(pickedImage, widget.selectedNumber),
+          child: AddImage(pickedFile, widget.selectedNumber),
+        );
+      },
+    );
+  }
+
+  void showAlertforFile(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          child: AddFile(pickedFile, widget.selectedNumber),
         );
       },
     );
@@ -111,10 +129,14 @@ class _NewHouseMessageState extends State<NewHouseMessage> {
               color: Colors.lightGreen,
             ),
           ),
-          IconButton(
-            onPressed: _userEnterMessage.trim().isEmpty ? null : _sendMessage,
-            icon: Icon(Icons.file_copy),
-            color: Colors.lightGreen,
+          GestureDetector(
+            child: IconButton(
+              onPressed: () {
+                showAlertforFile(context);
+              },
+              icon: Icon(Icons.file_copy),
+              color: Colors.lightGreen,
+            ),
           ),
           IconButton(
             onPressed: _userEnterMessage.trim().isEmpty ? null : _sendMessage,
