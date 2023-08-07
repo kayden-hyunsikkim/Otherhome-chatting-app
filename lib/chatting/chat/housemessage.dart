@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
 
 class HouseMessages extends StatefulWidget {
   final int selectedNumber; // 추가: 선택한 번호를 받아오는 매개변수
@@ -95,7 +98,6 @@ class _HouseMessageState extends State<HouseMessages> {
                   chatDocs[index]['userID'].toString() == user!.uid,
                   chatDocs[index]['userName'],
                   chatDocs[index]['userImage'],
-
                 ),
                 SizedBox(height: 8),
                 if (chatDocs[index].data().containsKey('sentImage')) // 'sentImage' 필드가 있는지 확인
